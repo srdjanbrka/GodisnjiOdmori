@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="sr-Latn">
+<head>
+    <meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>@ViewBag.Title — Godišnji odmori</title>
+    <link rel="stylesheet" href="@Url.Content("~/Content/Site.css")" />
+</head>
+<body>
+<header class="no-print"><a class="brand" href="@Url.Action("Index","Zahtev")">Godišnji odmori</a>
+@if (Request.IsAuthenticated) {
+    <nav>
+        <a href="@Url.Action("Index","Zahtev")">@(User.IsInRole("Zaposleni")?"Moji zahtevi":"Svi zahtevi")</a>
+        @if(User.IsInRole("Kadrovska")) { <a href="@Url.Action("Zaposleni","Zahtev")">Zaposleni</a> }
+        <span class="role">@(User.IsInRole("Kadrovska")?"Kadrovska služba":"Zaposleni")</span>
+    </nav>
+    using (Html.BeginForm("Odjava","Login",FormMethod.Post)) { @Html.AntiForgeryToken()<button class="secondary" type="submit">Odjava</button> }
+}
+</header>
+<main>
+@if (TempData["Poruka"] != null) { <div class="notice no-print" role="status">@TempData["Poruka"]</div> }
+@RenderBody()
+</main>
+<footer class="no-print">Seminarski projekat · Evidencija i odobravanje zahteva zaposlenih za godišnji odmor</footer>
+</body></html>

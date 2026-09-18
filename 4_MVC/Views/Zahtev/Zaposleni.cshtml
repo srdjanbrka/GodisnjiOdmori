@@ -1,0 +1,6 @@
+@model System.Collections.Generic.List<GodisnjiOdmori.Podaci.Zaposleni>
+@{ ViewBag.Title="Zaposleni"; }
+<h1>Zaposleni i sektori</h1><section class="card"><p>Početni šifarnici za demonstraciju poslovnog procesa. U ovoj verziji održavaju se u bazi.</p>
+<table><thead><tr><th>Ime i prezime</th><th>Sektor</th><th>Radno mesto</th></tr></thead><tbody>
+@foreach(var z in Model) { <tr><td>@z.ImePrezime</td><td>@z.Sektor</td><td>@z.RadnoMesto</td></tr> }
+</tbody></table></section>

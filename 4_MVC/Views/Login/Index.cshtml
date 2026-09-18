@@ -1,0 +1,11 @@
+@{ ViewBag.Title="Prijava"; }
+<section class="card login"><p class="eyebrow">GODIŠNJI ODMORI</p><h1>Prijava na sistem</h1>
+<p>Zaposleni podnosi zahtev, a kadrovska služba ga obrađuje.</p>
+@using(Html.BeginForm("Index","Login",FormMethod.Post)) {
+    @Html.AntiForgeryToken() @Html.ValidationSummary(false)
+    <label for="korisnickoIme">Korisničko ime</label><input id="korisnickoIme" name="korisnickoIme" autocomplete="username" required maxlength="50" />
+    <label for="lozinka">Lozinka</label><input id="lozinka" name="lozinka" type="password" autocomplete="current-password" required maxlength="200" />
+    <button type="submit">Prijavi se</button>
+}
+<div class="demo"><strong>Demo nalozi</strong><br />Zaposleni: <code>zaposleni</code> / <code>ZaposleniDemo2026!</code><br />Kadrovska: <code>kadrovska</code> / <code>OdmorDemo2026!</code></div>
+</section>
