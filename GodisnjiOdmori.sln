@@ -1,0 +1,42 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Podaci", "1_SlojPodataka\Podaci.csproj", "{A11B0001-1111-4444-8888-000000000001}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logika", "2_PoslovnaLogika\Logika.csproj", "{A11B0002-1111-4444-8888-000000000002}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Servis", "3_RESTServis\Servis.csproj", "{A11B0003-1111-4444-8888-000000000003}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVC", "4_MVC\MVC.csproj", "{A11B0004-1111-4444-8888-000000000004}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testovi", "Testovi\Testovi.csproj", "{A11B0005-1111-4444-8888-000000000005}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A11B0001-1111-4444-8888-000000000001}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A11B0001-1111-4444-8888-000000000001}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A11B0001-1111-4444-8888-000000000001}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A11B0001-1111-4444-8888-000000000001}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A11B0002-1111-4444-8888-000000000002}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A11B0002-1111-4444-8888-000000000002}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A11B0002-1111-4444-8888-000000000002}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A11B0002-1111-4444-8888-000000000002}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A11B0003-1111-4444-8888-000000000003}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A11B0003-1111-4444-8888-000000000003}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A11B0003-1111-4444-8888-000000000003}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A11B0003-1111-4444-8888-000000000003}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A11B0004-1111-4444-8888-000000000004}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A11B0004-1111-4444-8888-000000000004}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A11B0004-1111-4444-8888-000000000004}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A11B0004-1111-4444-8888-000000000004}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A11B0005-1111-4444-8888-000000000005}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A11B0005-1111-4444-8888-000000000005}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A11B0005-1111-4444-8888-000000000005}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A11B0005-1111-4444-8888-000000000005}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

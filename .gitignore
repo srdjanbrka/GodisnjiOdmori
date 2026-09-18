@@ -1,0 +1,27 @@
+# Visual Studio korisnički i privremeni fajlovi
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Rezultati prevođenja
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+
+# NuGet paketi
+packages/
+*.nupkg
+
+# Test rezultati i logovi
+TestResults/
+*.log
+
+# Operativni sistem
+Thumbs.db
+Desktop.ini
+.DS_Store
