@@ -32,7 +32,6 @@ CREATE TABLE dbo.Zahtev (
     DatumOd date NOT NULL,
     DatumDo date NOT NULL,
     Status nvarchar(20) NOT NULL DEFAULT N'Podnet',
-    Napomena nvarchar(500) NULL,
     Verzija rowversion NOT NULL,
     CONSTRAINT CK_Period CHECK(DatumDo >= DatumOd),
     CONSTRAINT CK_Status CHECK(Status IN (N'Podnet', N'Odobren', N'Odbijen', N'Na čekanju'))

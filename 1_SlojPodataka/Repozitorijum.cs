@@ -40,7 +40,6 @@ namespace GodisnjiOdmori.Podaci
                 SektorID=(int)r["SektorID"],ImePrezime=(string)r["ImePrezime"],Sektor=(string)r["Sektor"],
                 RadnoMesto=(string)r["RadnoMesto"],DatumOd=(DateTime)r["DatumOd"],DatumDo=(DateTime)r["DatumDo"],
                 DatumPodnosenja=(DateTime)r["DatumPodnosenja"],Status=(string)r["Status"],
-                Napomena=r["Napomena"]==DBNull.Value?null:(string)r["Napomena"],
                 Verzija=Convert.ToBase64String((byte[])r["Verzija"]),BrojDana=(int)r["BrojDana"] };
         }
         public List<Zahtev> Zahtevi(string filter="",int? zaposleniId=null)
@@ -90,14 +89,14 @@ namespace GodisnjiOdmori.Podaci
         {
             if(z.ZahtevID==0)
             {
-                using(var c=Komanda(@"INSERT dbo.Zahtev(ZaposleniID,DatumOd,DatumDo,Napomena,Status)
-                    OUTPUT INSERTED.ZahtevID VALUES(@z,@od,@do,@n,@s)","@z",z.ZaposleniID,"@od",z.DatumOd,"@do",z.DatumDo,"@n",z.Napomena,"@s",z.Status))
+                using(var c=Komanda(@"INSERT dbo.Zahtev(ZaposleniID,DatumOd,DatumDo,Status)
+                    OUTPUT INSERTED.ZahtevID VALUES(@z,@od,@do,@s)","@z",z.ZaposleniID,"@od",z.DatumOd,"@do",z.DatumDo,"@s",z.Status))
                     z.ZahtevID=Convert.ToInt32(c.ExecuteScalar());
             }
             else
             {
-                using(var c=Komanda(@"UPDATE dbo.Zahtev SET ZaposleniID=@z,DatumOd=@od,DatumDo=@do,Napomena=@n,Status=@s WHERE ZahtevID=@id",
-                    "@z",z.ZaposleniID,"@od",z.DatumOd,"@do",z.DatumDo,"@n",z.Napomena,"@s",z.Status,"@id",z.ZahtevID)) c.ExecuteNonQuery();
+                using(var c=Komanda(@"UPDATE dbo.Zahtev SET ZaposleniID=@z,DatumOd=@od,DatumDo=@do,Status=@s WHERE ZahtevID=@id",
+                    "@z",z.ZaposleniID,"@od",z.DatumOd,"@do",z.DatumDo,"@s",z.Status,"@id",z.ZahtevID)) c.ExecuteNonQuery();
                 using(var c=Komanda("DELETE dbo.DanOdmora WHERE ZahtevID=@id","@id",z.ZahtevID)) c.ExecuteNonQuery();
             }
             foreach(var dan in z.Dani)

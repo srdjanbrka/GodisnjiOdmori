@@ -2,14 +2,15 @@
 @{ ViewBag.Title="Zahtev #"+Model.ZahtevID; }
 <div class="heading"><div><p class="eyebrow">DOKUMENT #@Model.ZahtevID</p><h1>Zahtev za korišćenje godišnjeg odmora</h1></div><button class="secondary no-print" onclick="window.print()">Štampaj</button></div>
 <section class="card">
-<dl class="grid"><div><dt>Zaposleni</dt><dd>@Model.ImePrezime</dd><dt>Sektor / radno mesto</dt><dd>@Model.Sektor / @Model.RadnoMesto</dd></div>
-<div><dt>Datum podnošenja</dt><dd>@Model.DatumPodnosenja.ToString("dd.MM.yyyy. HH:mm")</dd><dt>Status</dt><dd>@Model.Status</dd></div></dl>
-<p>Period: <strong>@Model.DatumOd.ToString("dd.MM.yyyy.") – @Model.DatumDo.ToString("dd.MM.yyyy.")</strong> · @Model.BrojDana radnih dana</p>
-<p>Napomena: @Model.Napomena</p>
-<h2>Stavke zahteva — dani odsustva</h2>
-<table><thead><tr><th>Redni broj</th><th>Datum</th></tr></thead><tbody>
-@for(int i=0;i<Model.Dani.Count;i++) { <tr><td>@(i+1)</td><td>@Model.Dani[i].ToString("dd.MM.yyyy.")</td></tr> }
-</tbody></table>
+<dl class="grid document-summary"><div>
+<dt>Zaposleni</dt><dd>@Model.ImePrezime</dd>
+<dt>Sektor / radno mesto</dt><dd>@Model.Sektor / @Model.RadnoMesto</dd>
+<dt>Period korišćenja odmora</dt><dd>@Model.DatumOd.ToString("dd.MM.yyyy.") – @Model.DatumDo.ToString("dd.MM.yyyy.")</dd>
+</div><div>
+<dt>Datum podnošenja</dt><dd>@Model.DatumPodnosenja.ToString("dd.MM.yyyy. HH:mm")</dd>
+<dt>Status</dt><dd>@Model.Status</dd>
+<dt>Broj radnih dana</dt><dd>@Model.BrojDana</dd>
+</div></dl>
 <p class="print-only">Potpis zaposlenog: ____________________ &nbsp; Potpis odgovornog lica: ____________________</p>
 <div class="actions no-print">
 @if(User.IsInRole("Kadrovska") && (Model.Status=="Podnet" || Model.Status=="Na čekanju")) {
@@ -20,7 +21,7 @@ using(Html.BeginForm("Odbij","Zahtev",FormMethod.Post)) { @Html.AntiForgeryToken
 }
 @if(User.IsInRole("Zaposleni") && Model.Status!="Odobren") {
 <a class="button secondary" href="@Url.Action("Izmeni",new{id=Model.ZahtevID})">Izmeni</a>
-using(Html.BeginForm("Obrisi","Zahtev",FormMethod.Post,new{onsubmit="return confirm('Trajno obrisati ovaj zahtev i njegove stavke?');"})) { @Html.AntiForgeryToken()<input type="hidden" name="id" value="@Model.ZahtevID" /><input type="hidden" name="verzija" value="@Model.Verzija" /><button class="danger" type="submit">Obriši</button> }
+using(Html.BeginForm("Obrisi","Zahtev",FormMethod.Post,new{onsubmit="return confirm('Trajno obrisati ovaj zahtev?');"})) { @Html.AntiForgeryToken()<input type="hidden" name="id" value="@Model.ZahtevID" /><input type="hidden" name="verzija" value="@Model.Verzija" /><button class="danger" type="submit">Obriši</button> }
 }
 <a href="@Url.Action("Index")">Nazad</a>
 </div>

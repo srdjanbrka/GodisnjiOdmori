@@ -8,8 +8,7 @@
     <p><strong>Zaposleni:</strong> @ViewBag.ZaposleniIme</p>
     <div class="grid"><div><label for="DatumOd">Prvi dan odsustva</label>@Html.TextBoxFor(m=>m.DatumOd,"{0:yyyy-MM-dd}",new{type="date",required="required",min=DateTime.Today.ToString("yyyy-MM-dd")})</div>
     <div><label for="DatumDo">Poslednji dan odsustva</label>@Html.TextBoxFor(m=>m.DatumDo,"{0:yyyy-MM-dd}",new{type="date",required="required",min=DateTime.Today.ToString("yyyy-MM-dd")})</div></div>
-    <label for="Napomena">Napomena</label>@Html.TextAreaFor(m=>m.Napomena,new{rows=3,maxlength=500})
-    <p class="hint">Stavke dokumenta su pojedinačni radni dani. Računaju se ponedeljak–petak, bez izuzimanja praznika. Slanjem zahtev dobija status „Podnet“, a kadrovska služba ga zatim obrađuje.</p>
+    <p class="hint">Broj dana računa se od ponedeljka do petka, bez izuzimanja praznika. Slanjem zahtev dobija status „Podnet“, a kadrovska služba ga zatim obrađuje.</p>
     <button type="submit">@(Model.ZahtevID==0?"Podnesi zahtev":"Sačuvaj izmene")</button> <a class="button secondary" href="@Url.Action("Index")">Odustani</a>
 }
 </section>

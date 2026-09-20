@@ -21,7 +21,7 @@ Aplikacija omogućava zaposlenom da podnese zahtev za godišnji odmor, dok kadro
 
 | Uloga | Mogućnosti |
 |---|---|
-| Zaposleni | Vidi samo svoje zahteve, podnosi novi zahtev, menja ili briše zahtev koji nije odobren i štampa detalje zahteva. |
+| Zaposleni | Vidi samo svoje zahteve, podnosi novi zahtev, menja ili briše zahtev koji nije odobren i štampa dokument zahteva. |
 | Kadrovska služba | Vidi zahteve svih zaposlenih, pretražuje evidenciju, pregleda zaposlene i odobrava ili odbija zahteve. |
 
 ## Poslovno pravilo
@@ -131,6 +131,8 @@ Prilikom podnošenja ili izmene zahteva primenjuju se sledeće provere:
 
 Radni dani se računaju od ponedeljka do petka. Državni praznici nisu obuhvaćeni ovim prototipom.
 
+Razlog godišnjeg odmora se ne unosi. Dokument prikazuje samo podatke potrebne za obradu: zaposlenog, sektor i radno mesto, period, datum podnošenja, status i ukupan broj radnih dana. Pojedinačni datumi čuvaju se samo kao interna evidencija radi provere poslovnog pravila i nisu prikazani kao stavke dokumenta.
+
 ## Demonstracija poslovnog pravila
 
 Za brzu demonstraciju ograničenja X:
@@ -141,7 +143,7 @@ Za brzu demonstraciju ograničenja X:
 4. Prijaviti se kao kadrovska služba i izabrati **Proveri i odobri**.
 5. Pošto je `X = 2`, novi zahtev se automatski postavlja u status **Na čekanju**.
 
-Skripta je bezbedna za ponovno pokretanje jer proverava da li demo redovi sa oznakom `DEMO_LIMIT_X` već postoje i neće ih dodati ponovo.
+Skripta je bezbedna za ponovno pokretanje jer proverava da li za demo zaposlene, period i status već postoje odgovarajući zahtevi i neće ih dodati ponovo.
 
 ## Testiranje poslovne logike
 

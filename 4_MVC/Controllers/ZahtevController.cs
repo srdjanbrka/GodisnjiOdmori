@@ -46,7 +46,7 @@ namespace GodisnjiOdmori.MVC.Controllers
             PostaviZaposlenog(); return View("Forma",z);
         }
         [HttpPost,ValidateAntiForgeryToken,Authorize(Roles="Zaposleni")]
-        public ActionResult Sacuvaj([Bind(Include="ZahtevID,DatumOd,DatumDo,Napomena,Verzija")] Zahtev z)
+        public ActionResult Sacuvaj([Bind(Include="ZahtevID,DatumOd,DatumDo,Verzija")] Zahtev z)
         {
             z.ZaposleniID=UlogovaniZaposleniID;
             ModelState.Remove("ZaposleniID");

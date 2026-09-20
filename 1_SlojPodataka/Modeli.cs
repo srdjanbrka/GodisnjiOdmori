@@ -26,8 +26,6 @@ namespace GodisnjiOdmori.Podaci
         [Required, DataType(DataType.Date)]
         public DateTime DatumDo { get; set; }
         public DateTime DatumPodnosenja { get; set; }
-        [StringLength(500, ErrorMessage="Napomena može imati najviše 500 znakova.")]
-        public string Napomena { get; set; }
         public string Status { get; set; }
         public string Verzija { get; set; }
         public int BrojDana { get; set; }
