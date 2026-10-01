@@ -1,4 +1,4 @@
-@model GodisnjiOdmori.Podaci.Zahtev
+@model GodisnjiOdmori.MVC.ModeliPrikaza.ZahtevDetaljiModel
 @{ ViewBag.Title="Zahtev #"+Model.ZahtevID; }
 <div class="heading"><div><p class="eyebrow">DOKUMENT #@Model.ZahtevID</p><h1>Zahtev za korišćenje godišnjeg odmora</h1></div><button class="secondary no-print" onclick="window.print()">Štampaj</button></div>
 <section class="card">
@@ -9,7 +9,7 @@
 </div><div>
 <dt>Datum podnošenja</dt><dd>@Model.DatumPodnosenja.ToString("dd.MM.yyyy. HH:mm")</dd>
 <dt>Status</dt><dd>@Model.Status</dd>
-<dt>Broj radnih dana</dt><dd>@Model.BrojDana</dd>
+<dt>Broj radnih dana</dt><dd>@Model.BrojRadnihDana</dd>
 </div></dl>
 <p class="print-only">Potpis zaposlenog: ____________________ &nbsp; Potpis odgovornog lica: ____________________</p>
 <div class="actions no-print">

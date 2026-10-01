@@ -1,14 +1,15 @@
-@model System.Collections.Generic.List<GodisnjiOdmori.Podaci.Zahtev>
+@model GodisnjiOdmori.MVC.ModeliPrikaza.ZahteviListaModel
 @{ ViewBag.Title="Zahtevi"; }
 <div class="heading"><div><p class="eyebrow">EVIDENCIJA</p><h1>@(User.IsInRole("Zaposleni")?"Moji zahtevi za godišnji odmor":"Zahtevi zaposlenih za godišnji odmor")</h1></div>@if(User.IsInRole("Zaposleni")){<a class="button" href="@Url.Action("Dodaj")">+ Novi zahtev</a>}</div>
 <section class="card">
-@using(Html.BeginForm("Index","Zahtev",FormMethod.Get,new { @class="search" })) {
-    <label for="filter">Pretraga</label><input id="filter" name="filter" value="@ViewBag.Filter" placeholder="Ime zaposlenog, sektor ili status" maxlength="100" /><button type="submit">Pretraži</button>
+@using(Html.BeginForm("Index","Zahtev",FormMethod.Get,new { @class="search no-print" })) {
+    <label for="filter">Pretraga</label><input id="filter" name="filter" value="@Model.Filter" placeholder="Ime zaposlenog, sektor ili status" maxlength="100" /><button type="submit">Pretraži</button>
     <a href="@Url.Action("Index")">Poništi</a>
 }
-<div class="table-wrap"><table><thead><tr><th>Broj</th><th>Zaposleni / sektor</th><th>Period</th><th>Radnih dana</th><th>Status</th><th></th></tr></thead><tbody>
-@foreach(var z in Model) {
-<tr><td>#@z.ZahtevID</td><td>@z.ImePrezime<small>@z.Sektor</small></td><td>@z.DatumOd.ToString("dd.MM.yyyy.") – @z.DatumDo.ToString("dd.MM.yyyy.")</td><td>@z.BrojDana</td><td><span class="badge">@z.Status</span></td><td><a href="@Url.Action("Detalji",new {id=z.ZahtevID})">Otvori</a></td></tr>
+<div class="no-print" style="margin-bottom:1rem"><button class="secondary" type="button" onclick="window.print()">Štampaj listu</button></div>
+<div class="table-wrap"><table><thead><tr><th>Broj</th><th>Zaposleni / sektor</th><th>Period</th><th>Radnih dana</th><th>Status</th><th class="no-print"></th></tr></thead><tbody>
+@foreach(var z in Model.Zahtevi) {
+<tr><td>#@z.ZahtevID</td><td>@z.ImePrezime<small>@z.Sektor</small></td><td>@z.DatumOd.ToString("dd.MM.yyyy.") – @z.DatumDo.ToString("dd.MM.yyyy.")</td><td>@z.BrojDana</td><td><span class="badge">@z.Status</span></td><td class="no-print"><a href="@Url.Action("Detalji",new {id=z.ZahtevID})">Otvori</a></td></tr>
 }
-@if(Model.Count==0) { <tr><td colspan="6">Nema zahteva za prikaz. Dodajte prvi zahtev ili promenite pretragu.</td></tr> }
+@if(Model.Zahtevi.Count==0) { <tr><td colspan="6">Nema zahteva za prikaz. Dodajte prvi zahtev ili promenite pretragu.</td></tr> }
 </tbody></table></div></section>

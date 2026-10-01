@@ -1,42 +1,83 @@
 using System;
 using System.Configuration;
+using System.Data.Entity.Core;
+using System.Data.SqlClient;
 using System.Security.Cryptography;
 using System.Web.Mvc;
 using System.Web.Security;
+using GodisnjiOdmori.MVC.ModeliPrikaza;
+using GodisnjiOdmori.Podaci;
 
 namespace GodisnjiOdmori.MVC.Controllers
 {
-    // Dva demonstraciona naloga: zaposleni podnosi zahtev, kadrovska ga obrađuje.
     public class LoginController : Controller
     {
+        private string Konekcija { get { return ConfigurationManager.ConnectionStrings["Odmori"].ConnectionString; } }
+
         [HttpGet]
-        public ActionResult Index() { return View(); }
-        [HttpPost, ValidateAntiForgeryToken]
-        public ActionResult Index(string korisnickoIme,string lozinka)
+        public ActionResult Index()
         {
-            if(lozinka==null || lozinka.Length>200) { ModelState.AddModelError("","Pogrešni podaci za prijavu."); return View(); }
-            string uloga=null,podaci="";
-            if(korisnickoIme==ConfigurationManager.AppSettings["KadrovskaUser"] && Poklapa(lozinka,"KadrovskaSalt","KadrovskaHash"))
-                uloga="Kadrovska";
-            else if(korisnickoIme==ConfigurationManager.AppSettings["ZaposleniUser"] && Poklapa(lozinka,"ZaposleniSalt","ZaposleniHash")) {
-                uloga="Zaposleni"; podaci=ConfigurationManager.AppSettings["ZaposleniID"];
+            if(User.Identity.IsAuthenticated) return RedirectToAction("Index","Zahtev");
+            return View(new PrijavaModel());
+        }
+
+        [HttpPost,ValidateAntiForgeryToken]
+        public ActionResult Index(PrijavaModel model)
+        {
+            if(!ModelState.IsValid) return View(model);
+
+            Korisnik korisnik;
+            try {
+                korisnik=new KorisnikRepozitorijum(Konekcija)
+                    .DajPoKorisnickomImenu(model.KorisnickoIme.Trim());
             }
-            if(uloga==null) { ModelState.AddModelError("","Pogrešni podaci za prijavu."); return View(); }
+            catch(Exception e) when(e is SqlException || e is EntityException)
+            {
+                ModelState.AddModelError("","Prijava nije dostupna. Proverite bazu i izvršite SQL skriptu.");
+                return View(model);
+            }
+
+            if(korisnik==null || !korisnik.Aktivan
+                || !Poklapa(model.Lozinka,korisnik.LozinkaSalt,korisnik.LozinkaHash))
+            {
+                ModelState.AddModelError("","Pogrešni podaci za prijavu.");
+                return View(model);
+            }
+
             var sada=DateTime.Now;
-            var tiket=new FormsAuthenticationTicket(1,korisnickoIme,sada,sada.AddMinutes(30),false,uloga+"|"+podaci,FormsAuthentication.FormsCookiePath);
-            Response.Cookies.Add(new System.Web.HttpCookie(FormsAuthentication.FormsCookieName,FormsAuthentication.Encrypt(tiket)) { HttpOnly=true });
+            string zaposleniId=korisnik.ZaposleniID.HasValue?korisnik.ZaposleniID.Value.ToString():"";
+            var tiket=new FormsAuthenticationTicket(1,korisnik.KorisnickoIme,sada,sada.AddMinutes(30),false,
+                korisnik.Uloga+"|"+zaposleniId,FormsAuthentication.FormsCookiePath);
+            Response.Cookies.Add(new System.Web.HttpCookie(
+                FormsAuthentication.FormsCookieName,FormsAuthentication.Encrypt(tiket)) {
+                    HttpOnly=true,Secure=Request.IsSecureConnection,SameSite=System.Web.SameSiteMode.Lax
+                });
             return RedirectToAction("Index","Zahtev");
         }
-        private static bool Poklapa(string lozinka,string saltKljuc,string hashKljuc)
+
+        private static bool Poklapa(string lozinka,string saltBase64,string hashBase64)
         {
-            var salt=Convert.FromBase64String(ConfigurationManager.AppSettings[saltKljuc]);
-            var ocekivano=Convert.FromBase64String(ConfigurationManager.AppSettings[hashKljuc]);
+            byte[] salt,ocekivano;
+            try {
+                salt=Convert.FromBase64String(saltBase64);
+                ocekivano=Convert.FromBase64String(hashBase64);
+            }
+            catch(FormatException) { return false; }
+
             byte[] dobijeno;
-            using(var k=new Rfc2898DeriveBytes(lozinka,salt,100000,HashAlgorithmName.SHA256)) dobijeno=k.GetBytes(32);
-            int razlika=0; for(int i=0;i<ocekivano.Length;i++) razlika|=dobijeno[i]^ocekivano[i];
+            using(var k=new Rfc2898DeriveBytes(lozinka,salt,100000,HashAlgorithmName.SHA256))
+                dobijeno=k.GetBytes(32);
+            if(dobijeno.Length!=ocekivano.Length) return false;
+            int razlika=0;
+            for(int i=0;i<ocekivano.Length;i++) razlika|=dobijeno[i]^ocekivano[i];
             return razlika==0;
         }
-        [HttpPost, ValidateAntiForgeryToken, Authorize]
-        public ActionResult Odjava() { FormsAuthentication.SignOut(); return RedirectToAction("Index"); }
+
+        [HttpPost,ValidateAntiForgeryToken,Authorize]
+        public ActionResult Odjava()
+        {
+            FormsAuthentication.SignOut();
+            return RedirectToAction("Index");
+        }
     }
 }

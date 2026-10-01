@@ -7,7 +7,6 @@ namespace GodisnjiOdmori.Logika
 {
     public static class Pravilo
     {
-        // Pretpostavka prototipa: radni dani ponedeljak–petak, bez kalendara praznika.
         public static List<DateTime> RadniDani(DateTime od,DateTime doDatuma)
         {
             od=od.Date; doDatuma=doDatuma.Date;

@@ -11,6 +11,7 @@ Aplikacija omogućava zaposlenom da podnese zahtev za godišnji odmor, dok kadro
 - podnošenje, izmena i brisanje zahteva zaposlenog;
 - pretraga zahteva po zaposlenom, sektoru ili statusu;
 - pregled i štampanje pojedinačnog zahteva;
+- štampanje spiska svih ili trenutno filtriranih zahteva;
 - odobravanje ili odbijanje zahteva od strane kadrovske službe;
 - automatsko postavljanje zahteva na čekanje kada je prekoračen limit odsutnih;
 - provera ispravnosti perioda godišnjeg odmora;
@@ -38,10 +39,10 @@ Rešenje je organizovano u četiri sloja:
 
 | Projekat | Uloga |
 |---|---|
-| `1_SlojPodataka` | Modeli, pristup SQL Server bazi i izvršavanje upita. |
+| `1_SlojPodataka` | Odvojeni modeli i CRUD repozitorijumi sa EF, ADO.NET/stored procedure i DBUtils pristupom. |
 | `2_PoslovnaLogika` | Validacija perioda, računanje radnih dana i primena poslovnog pravila. |
 | `3_RESTServis` | Web API koji čita parametar X iz XML fajla. |
-| `4_MVC` | ASP.NET MVC korisnički interfejs, prijava i autorizacija. |
+| `4_MVC` | ASP.NET MVC korisnički interfejs sa posebnim ViewModel klasama, prijava i autorizacija. |
 | `Testovi` | Konzolne provere poslovne logike. |
 
 Tok odobravanja zahteva:
@@ -58,7 +59,9 @@ Tok odobravanja zahteva:
 - ASP.NET MVC 5;
 - ASP.NET Web API;
 - Microsoft SQL Server;
-- ADO.NET;
+- Entity Framework 6 i LINQ;
+- ADO.NET i bazna DBUtils klasa `Tabela`;
+- stored procedure;
 - XML;
 - Razor, HTML i CSS;
 - Forms Authentication i autorizacija na osnovu uloga.
@@ -82,7 +85,10 @@ Za pokretanje su potrebni:
 3. Otvoriti [`Baza/01_Baza.sql`](Baza/01_Baza.sql).
 4. Izvršiti celu skriptu komandom **Execute**.
 
-Skripta kreira bazu `GodisnjiOdmori`, potrebne tabele, indekse, proceduru i početne podatke. Ako baza već postoji, skripta je neće prepisati.
+Skripta kreira bazu `GodisnjiOdmori`, potrebne tabele, indekse, korisnike, CRUD stored procedure i početne podatke. Ako baza već postoji, skripta je neće prepisati.
+
+Ako je ranija verzija baze već kreirana, umesto prve skripte izvršiti
+[`Baza/03_KorekcijeProfesor.sql`](Baza/03_KorekcijeProfesor.sql). Migracija čuva postojeće zahteve i dodaje tabelu korisnika, validacije i procedure.
 
 Ako se SQL Server ne nalazi na adresi `localhost`, u fajlu [`4_MVC/Web.config`](4_MVC/Web.config) treba promeniti `Data Source` u connection stringu `Odmori`.
 
@@ -117,7 +123,25 @@ Otvaranje samo `http://localhost:5101/` može prikazati IIS grešku `403.14`, je
 | Zaposleni | `zaposleni` | `ZaposleniDemo2026!` |
 | Kadrovska služba | `kadrovska` | `OdmorDemo2026!` |
 
-Demo nalog zaposlenog povezan je sa zaposlenom **Anom Petrović** (`ZaposleniID = 1`). Nalozi služe isključivo za lokalnu demonstraciju projekta.
+Demo nalog zaposlenog logički je povezan sa zaposlenom **Anom Petrović** vrednošću `ZaposleniID = 1`. Tabela `Korisnik` je nezavisna i nema strani ključ prema ostalim tabelama. Lozinke se čuvaju kao PBKDF2-SHA256 salt i hash.
+
+## Entity Framework, modeli i repozitorijumi
+
+Svaki model je u zasebnom fajlu: `Sektor.cs`, `Zaposleni.cs`, `Zahtev.cs`, `DanOdmora.cs` i `Korisnik.cs`. Klasa `GodisnjiOdmoriContext` nasleđuje `DbContext` i mapira modele na SQL Server tabele.
+
+Za svaki glavni model postoji poseban repozitorijum sa CRUD operacijama: `SektorRepozitorijum`, `ZaposleniRepozitorijum`, `ZahtevRepozitorijum`, `DanOdmoraRepozitorijum` i `KorisnikRepozitorijum`.
+
+Prikazana su tri tražena načina pristupa podacima:
+
+- `ZahtevRepozitorijum`, `ZaposleniRepozitorijum` i `DanOdmoraRepozitorijum` koriste Entity Framework;
+- `KorisnikRepozitorijum` koristi standardni ADO.NET i stored procedure za CRUD;
+- `SektorRepozitorijum` nasleđuje DBUtils klasu `Tabela` i koristi parametrizovane SQL upite.
+
+## MVC ViewModeli i štampa
+
+Razor prikazi koriste posebne klase iz direktorijuma `4_MVC/ModeliPrikaza`, a ne direktno entitete baze. Poslovna klasa `PripremaDokumenta` priprema podatke pojedinačnog dokumenta za prikaz i štampanje.
+
+Na stranici evidencije dugme **Štampaj listu** štampa sve trenutno prikazane redove. Bez filtera to je spisak svih dostupnih zahteva, a sa filterom filtrirani spisak.
 
 ## Validacija perioda
 
@@ -131,7 +155,7 @@ Prilikom podnošenja ili izmene zahteva primenjuju se sledeće provere:
 
 Radni dani se računaju od ponedeljka do petka. Državni praznici nisu obuhvaćeni ovim prototipom.
 
-Razlog godišnjeg odmora se ne unosi. Dokument prikazuje samo podatke potrebne za obradu: zaposlenog, sektor i radno mesto, period, datum podnošenja, status i ukupan broj radnih dana. Pojedinačni datumi čuvaju se samo kao interna evidencija radi provere poslovnog pravila i nisu prikazani kao stavke dokumenta.
+Razlog godišnjeg odmora se ne unosi. Dokument prikazuje samo podatke potrebne za obradu: zaposlenog, sektor i radno mesto, period, datum podnošenja, status i ukupan broj radnih dana. Pojedinačni datumi čuvaju se samo kao interna evidencija radi provere poslovnog pravila i nisu prikazani kao stavke dokumenta. Opcioni master-detail unos i prikaz nisu implementirani.
 
 ## Demonstracija poslovnog pravila
 
@@ -177,9 +201,11 @@ GodisnjiOdmori/
 ├── 3_RESTServis/
 │   └── App_Data/Parametri.xml
 ├── 4_MVC/
+│   └── ModeliPrikaza/
 ├── Baza/
 │   ├── 01_Baza.sql
-│   └── 02_DemoLimit.sql
+│   ├── 02_DemoLimit.sql
+│   └── 03_KorekcijeProfesor.sql
 ├── Dokumentacija/
 │   └── Seminarski_rad_Godisnji_odmori.docx
 ├── Testovi/
@@ -191,7 +217,9 @@ GodisnjiOdmori/
 ## Napomene
 
 - Projekat je namenjen lokalnom akademskom demonstriranju.
-- Autentikacija koristi dva demonstraciona naloga definisana u konfiguraciji aplikacije.
+- Autentikacija koristi dva demonstraciona naloga iz nezavisne tabele `Korisnik`.
+- Sloj podataka prikazuje Entity Framework, ADO.NET/stored procedure i DBUtils pristup.
+- Opcioni master-detail interfejs i JavaScript/regex validacije nisu deo projekta.
 - Parametar X menja se u XML fajlu bez izmene i ponovnog prevođenja poslovne logike.
 - REST servis mora biti pokrenut da bi odobravanje zahteva moglo da primeni poslovno pravilo.
 

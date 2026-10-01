@@ -20,8 +20,20 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Compile Include="Modeli.cs" />
-    <Compile Include="Repozitorijum.cs" />
+    <Compile Include="DanOdmora.cs" />
+    <Compile Include="DanOdmoraRepozitorijum.cs" />
+    <Compile Include="GodisnjiOdmoriContext.cs" />
+    <Compile Include="Korisnik.cs" />
+    <Compile Include="KorisnikRepozitorijum.cs" />
+    <Compile Include="Odsustvo.cs" />
+    <Compile Include="Sektor.cs" />
+    <Compile Include="SektorRepozitorijum.cs" />
+    <Compile Include="Tabela.cs" />
+    <Compile Include="Zahtev.cs" />
+    <Compile Include="ZahtevRepozitorijum.cs" />
+    <Compile Include="Zaposleni.cs" />
+    <Compile Include="ZaposleniRepozitorijum.cs" />
+    <PackageReference Include="EntityFramework" Version="6.4.4" />
 
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,3 @@
--- OPCIONO: pokrenuti samo ako želite brzu demonstraciju poslovnog pravila X=2.
--- Dodaje dva odobrena zahteva iz sektora Razvoj softvera za sledeću radnu nedelju.
--- Skripta je idempotentna: istom zaposlenom neće ponovo dodati zahtev za isti demo period.
 USE GodisnjiOdmori;
 GO
 SET DATEFIRST 1;

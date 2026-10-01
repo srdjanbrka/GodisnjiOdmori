@@ -11,7 +11,7 @@ namespace GodisnjiOdmori.Servis
     public class ParametriController : ApiController
     {
         [HttpGet, Route(""), Route("api/parametri")]
-        public HttpResponseMessage Get()
+        public HttpResponseMessage DajParametre()
         {
             try {
                 var xml=XDocument.Load(HostingEnvironment.MapPath("~/App_Data/Parametri.xml"));

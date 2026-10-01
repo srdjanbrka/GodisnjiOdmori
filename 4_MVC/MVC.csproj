@@ -31,8 +31,15 @@
     <Compile Include="Global.asax.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ZahtevController.cs" />
+    <Compile Include="ModeliPrikaza\PrijavaModel.cs" />
+    <Compile Include="ModeliPrikaza\ZahtevDetaljiModel.cs" />
+    <Compile Include="ModeliPrikaza\ZahtevFormaModel.cs" />
+    <Compile Include="ModeliPrikaza\ZahtevStavkaModel.cs" />
+    <Compile Include="ModeliPrikaza\ZahteviListaModel.cs" />
+    <Compile Include="ModeliPrikaza\ZaposleniStavkaModel.cs" />
     <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.9" />
     <PackageReference Include="Microsoft.AspNet.WebPages" Version="3.2.9" />
+    <PackageReference Include="EntityFramework" Version="6.4.4" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\1_SlojPodataka\Podaci.csproj"><Project>{A11B0001-1111-4444-8888-000000000001}</Project><Name>Podaci</Name></ProjectReference>
